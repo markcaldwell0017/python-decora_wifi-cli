@@ -1,40 +1,38 @@
-# python-decora_wifi
-Python Library for Interacting with [Leviton Decora](http://www.leviton.com/en/products/lighting-controls/decora-smart-with-wifi) Smart WiFi Switches &amp; Dimmers.
+# python-decora_wifi-cli
+New command line interface, for python-decora_wifi libraries written by Tlyakhov.
 
-The code is reverse engineered from the myLeviton Android app and includes an "API scraper" python script that generates model classes for invoking Leviton Cloud Services REST APIs.
+Command line control of Leviton Decora Smart WiFi Switches & Dimmers.
+Only the required libraries to run this new interface are included with this download and none of Tlyakhov's libraries have been changed.
+See tlyakhov/python-decora_wifi for more information about the original code.
 
-See `cli-test.py` for a usage example.
-
-Create a session first:
+You require the switch id(s) to send ON, OFF or 0-100 (for dimmer model) commands to your switch(es) through the Leviton cloud.  To generate a list of the switch ID's currently registered to your account, provide your email address and password on the command line as follows:
 ```
-session = DecoraWiFiSession()
-session.login(decora_email, decora_pass)
+Decora-cli.py [email] [pswd] ?
 ```
-
-After that, the logged in user is accessible in `session.user`.
-
-To get the user's residences, go through the ResidentialPermissions model like this:
+Yields an output, such as:
 ```
-perms = session.user.get_residential_permissions() # Usually just one of these
-
-for permission in perms:
-  acct = ResidentialAccount(session, permission.residentialAccountId)
-  residences = acct.get_residences()
+Permission id#12345 (Accountid#9876)
+Residence  id#9876  (your address)
+Switch1    id#45678 (Familyroom)
+Switch2    id#67890 (Livingroom)
+Switch3    id#23456 (Bedroom)
 ```
-
-Now from each residence, you can get a list of switches:
+Once you know your switch id(s), you can execute one or multiple commands on the same line:
 ```
-  for residence in residences:
-    switches = residence.get_iot_switches()
-    for switch in switches:
-      print(switch)
+Decora-cli.py [email] [pswd] [id#:ON|OFF|0-100] <[id#:ON|OFF|0-100]> <etc.>
 ```
 
-Other useful methods:
-* `switch.update_attributes({'power': 'ON', 'brightness': 75})` - Turn switch ON or OFF, change brightness. Print out your switch attributes to see what's available.
-* `switch.refresh()` - Refresh this model's data from the server.
-* `Person.logout(session)` - Log out from LCS.
-
-Notes:
-* Create/delete methods are untested. I was only interested in get/update methods for HASS integration. Feel free to submit a pull if something doesn't work.
-* This code uses the HTTPS interface to LCS, I believe there's also a websocket one, but I haven't investigated it.
+Example:
+```
+Decora-cli.py johnsmith@gmail.com password123 67890:ON 45678:OFF 23456:50
+```
+The program executes the events and returns an output, such as:
+```
+1. #67890 ON (Livingroom)
+2. #45678 OFF (Familyroom)
+3. #23456 50% (Bedroom)
+```
+FYI, the original user interface by Tlyakhov is included with the file download:
+```
+cli-test.py
+```
