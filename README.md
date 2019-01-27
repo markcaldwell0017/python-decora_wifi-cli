@@ -1,5 +1,5 @@
 # python-decora_wifi-cli
-New command line interface, for python-decora_wifi libraries written by Tlyakhov.
+Leviton Decora wifi switch command line interface, written in Python, utilizing libraries written by Tlyakhov.
 
 Command line control of Leviton Decora Smart WiFi Switches & Dimmers.
 Only the required libraries to run this new interface are included with this download and none of Tlyakhov's libraries have been changed.
