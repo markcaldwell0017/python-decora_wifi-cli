@@ -36,3 +36,10 @@ FYI, the original user interface by Tlyakhov is included with the file download:
 ```
 cli-test.py
 ```
+Disclaimer
+----------
+I'm not affiliated with Leviton Decora in any way. They don't endorse this application. They own all the rights to Leviton Decora (and all associated trademarks). 
+
+This software is provided as-is with no warranty whatsoever. 
+
+Leviton Decora could do things to block this kind of behavior if they want, hopefully they do not. Also, if you cause problems (by sending lots of trash to the Leviton Decora servers or anything), you're on your own.
