@@ -7,7 +7,7 @@ See tlyakhov/python-decora_wifi for more information about the original code.
 
 You require the switch id(s) to send ON, OFF or 0-100 (for dimmer model) commands to your switch(es) through the Leviton cloud.  To generate a list of the switch ID's currently registered to your account, provide your email address and password on the command line as follows:
 ```
-python Decora-cli.py [email] [pswd] ?
+python <path>/Decora-cli.py [email] [pswd] ?
 ```
 Yields an output, such as:
 ```
@@ -19,12 +19,12 @@ Switch3    id#23456 (Bedroom)
 ```
 Once you know your switch id(s), you can execute one or multiple commands on the same line:
 ```
-python Decora-cli.py [email] [pswd] [id#:ON|OFF|0-100] <[id#:ON|OFF|0-100]> <etc.>
+python <path>/Decora-cli.py [email] [pswd] [id#:ON|OFF|0-100] <[id#:ON|OFF|0-100]> <etc.>
 ```
 
 Example:
 ```
-python Decora-cli.py johnsmith@gmail.com password123 67890:ON 45678:OFF 23456:50
+python <path>/Decora-cli.py johnsmith@gmail.com password123 67890:ON 45678:OFF 23456:50
 ```
 The program executes the events and returns an output, such as:
 ```
