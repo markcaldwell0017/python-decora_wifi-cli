@@ -32,6 +32,25 @@ The program executes the events and returns an output, such as:
 2. #45678 OFF (Familyroom)
 3. #23456 50% (Bedroom)
 ```
+To determine the current state of a switch, use the following:
+```
+python <path>/Decora-cli.py [email] [pswd] [id#:?] <[id#:?]> <etc.>
+```
+Example:
+```
+python <path>/Decora-cli.py johnsmith@gmail.com password123 45678:? 67890:?
+```
+The program executes the events and returns an output, such as:
+```
+OFF  ID#45678  (Familyroom)
+ON  ID#67890  (Livingroom)
+```
+
+As commented by mtylerb, python-requests is required by this script. Install via apt package manager in Debian.
+```
+sudo apt-get install python-requests
+```
+
 FYI, the original user interface by Tlyakhov is included with the file download:
 ```
 cli-test.py
