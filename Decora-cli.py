@@ -7,17 +7,22 @@ from decora_wifi.residence import Residence
 import sys
 import time
 
+req_switch_ids = False
+execute_ON_OFF = False
+
 if len(sys.argv) < 4:
-    print('\nUsage: ./Decora-cli.py [email] [pswd] [id#:ON|OFF|0-100] <[id#:ON|OFF|0-100]> <etc.>')
-    print('Usage: ./Decora-cli.py [email] [pswd] ?    ... list all switch ids\n')
+    print('\nUsage: {} [email] [pswd] [id#:ON|OFF|0-100] <[id#:ON|OFF|0-100]> <etc.>'.format(sys.argv[0]))
+    print(  'Usage: {} [email] [pswd] [id#:?] <[id#:?]> <etc.>   ... list current status of switch(es)'.format(sys.argv[0]))
+    print(  'Usage: {} [email] [pswd] ?         ... list all switch ids\n'.format(sys.argv[0]))
     sys.exit(1)
 
 decora_email = sys.argv[1]
 decora_pass = sys.argv[2]
 if sys.argv[3] == '?':       # request a list of all switches with switch id's
     req_switch_ids = True
-else:
-    req_switch_ids = False
+
+else:                        # execute ON|OFF|0-100 and/or get status
+    execute_ON_OFF = True
 
 session = DecoraWiFiSession()
 session.login(decora_email, decora_pass)
@@ -40,7 +45,7 @@ for permission in perms:
 all_switches = []
 for residence in all_residences:    # only tested with one residence
 
-    if req_switch_ids == False: # execute ON|OFF|0-100 for each switch designated on command line
+    if execute_ON_OFF == True: # execute ON|OFF|0-100 for each switch designated on command line
         i = 4
         while i <= len(sys.argv):
             decora_pair = sys.argv[i-1].split(":")
@@ -53,20 +58,23 @@ for residence in all_residences:    # only tested with one residence
             if decora_cmd == 'ON':
                 attribs['power'] = 'ON'
                 print("{}. #{} {} ({})".format(i-3,switch_num.id,decora_cmd,switch_num.name))
+                switch_num.update_attributes(attribs)   # perform command on the designated switch
             elif decora_cmd == 'OFF':
                 attribs['power'] = 'OFF'
                 print("{}. #{} {} ({})".format(i-3,switch_num.id,decora_cmd,switch_num.name))
+                switch_num.update_attributes(attribs)   # perform command on the designated switch
+            elif decora_cmd == '?':
+                print("{}  ID#{}  ({})".format(switch_num.power,switch_num.id,switch_num.name))
             else:
                 decora_bright = int(decora_cmd)
                 attribs['brightness'] = decora_bright
                 print("{}. #{} {}% ({})".format(i-3,switch_num.id,decora_cmd,switch_num.name))
-
-            switch_num.update_attributes(attribs)   # perform command on the designated switch
+                switch_num.update_attributes(attribs)   # perform command on the designated switch
 
             time.sleep(.300)       # sleep 300 milliseconds
             i += 1
 
-    else:   # print residence and switch imformation
+    elif req_switch_ids == True:    # print residence and switch imformation
 
         print("Permission id#{} (Accountid#{})".format(permission.id, permission.residentialAccountId))
         # print("Permission: {}".format(permission))   # prints all information
@@ -74,9 +82,9 @@ for residence in all_residences:    # only tested with one residence
         # print("Residence: {}".format(res))  # prints all information
         i = 1
         for switch in residence.get_iot_switches():
-            print("Switch{}    id#{} ({})".format(i,switch.id,switch.name))
+            print("Switch{}    id#{} ({})  status: {}".format(i,switch.id,switch.name,switch.power))
             # print("Switch: {}".format(switch))   # prints all information
             i += 1
 
-Person.logout(session)
 
+Person.logout(session)
