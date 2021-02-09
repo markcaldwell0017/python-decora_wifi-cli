@@ -65,6 +65,11 @@ for residence in all_residences:    # only tested with one residence
                 switch_num.update_attributes(attribs)   # perform command on the designated switch
             elif decora_cmd == '?':
                 print("{}  ID#{}  ({})".format(switch_num.power,switch_num.id,switch_num.name))
+            elif decora_cmd == '??':
+                if switch_num.model == 'DW6HD':
+                    print(switch_num.brightness)
+                else:
+                    print(switch_num.power)
             else:
                 decora_bright = int(decora_cmd)
                 attribs['brightness'] = decora_bright
